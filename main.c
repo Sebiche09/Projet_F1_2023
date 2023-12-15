@@ -13,6 +13,8 @@
 int compare(const void *a, const void *b) {
     struct Pilote *piloteA = (struct Pilote *)a;
     struct Pilote *piloteB = (struct Pilote *)b;
+    if(piloteA->temps == 0){return 0;}
+    if(piloteB->temps == 0){return 0;}
 
     return (piloteA->temps - piloteB->temps);
 }
@@ -96,69 +98,41 @@ int main(int argc, char **argv) {
     // struct Pilote listeAffichage[20];
     for (int i = 0; i < indicePilote; i++)
     {
-        // sleep(10);
         int totalF = 0;
         int a = 0;
+        usleep(1000000);
         srand(time(NULL));
-        sleep(1);
         p_id = fork();
         if (p_id == 0)
         {
-            //srand(time(NULL));
-            
             while (a < 3)
         {
-            
+
             int random = rand() % 20001;
             int finaleR = 25000 + random;
             totalF += finaleR;
             listePilotes[i].tempsTour[a] = finaleR;
-            //printf("%d ms        ",finaleR);
             a++;
-            
         }
-
-            // listePilotes[i].id = i+1 ;
-
             listePilotes[i].temps = totalF;
-            // usleep(1000000);
-
             return 0;
-            // printf("%d\n",totalF);
-            // dup2(fd[1],1);
-            // afficheTemps(listePilotes[i]);
-            // sleep();
         }
-
         else if (p_id < 0)
         {
             printf("pas bon erreur");
             return -1;
         }
-        else
-        {
-            // close(fd[1]);
-            // wait(NULL);
-            // printf("Je suis le padré\n");
-            char result[3000];
-            // close(fd[1]);
-            // read(fd[0],result,sizeof(result));
-            // printf("%s",result);
-            // affichePilote(listePilotes[i]);
-            // afficheTemps(listePilotes[i]);
-            // sleep(2);
+        srand(time(NULL));
+
+        while(p_id == waitpid(-1,NULL,0)){
+                if(errno == ECHILD){
+                        break;
+                }
         }
-        // affichePilote(listePilotes[i]);
-        afficheTemps(listePilotes[i]);
-    }
+        qsort(listePilotes, indicePilote+1, sizeof(struct Pilote), compare);
+        afficherDonnees(listePilotes, 20);
 
+        }
 
-    qsort(listePilotes, indicePilote+1, sizeof(struct Pilote), compare);
-    for (int i = 0; i < indicePilote; i++)
-    {
-        printf("trié à l'indice : %d \n", i);
-        printf("Le temps du pilote num %d est de : %d \n", listePilotes[i].num, listePilotes[i].temps);
-    }
-	afficherDonnees(listePilotes, 20);
     shmdt(listePilotes);
 }
