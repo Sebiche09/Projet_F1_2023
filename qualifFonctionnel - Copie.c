@@ -9,6 +9,7 @@
 #include <sys/shm.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <stdbool.h>
 struct Course
 {
     int num;
@@ -31,6 +32,19 @@ struct Pilote
     int temps;
     int tempsTour[3];
 };
+
+bool demanderContinuer()
+{
+    char reponse;
+    printf("Voulez-vous continuer (O/N) ? ");
+    scanf(" %c", &reponse);
+
+    // Ignorer les caractères supplémentaires dans le buffer d'entrée
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+
+    return (reponse == 'O' || reponse == 'o');
+}
 
 int compare(const void *a, const void *b)
 {
@@ -303,7 +317,11 @@ int main(int argc, char **argv)
 	}
 	qsort(listePilotes, indicePilote+1, sizeof(struct Pilote), compare);
 	afficherDonnees(listePilotes, 20-nombreQ);
-
+	if (!demanderContinuer())
+            {
+                shmdt(listePilotes);
+                return 0;
+            }
     }
     printf("Qualif : %d",i);
     }
