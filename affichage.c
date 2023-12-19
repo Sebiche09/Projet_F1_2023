@@ -2,10 +2,13 @@
 #include <string.h>
 #include "structures.h"
 
+
 void afficherDonnees(struct Pilote pilotes[], int lignes) {
-        int colonnes = 6; // Nombre de colonnes
+	system("clear");
+
+    int colonnes = 6; // Nombre de colonnes
     int largeurs[colonnes];
-	char* titres[] = {"Classement", "Nom du Pilote", "Temps 1", "Temps 2", "Temps 3", "Temps 4"};
+	char* titres[] = {"Classement", "Nom du Pilote", "Temps 1", "Temps 2", "Temps 3", "Temps du tour"};
     for (int j = 0; j < colonnes; ++j) {
         largeurs[j] = strlen(titres[j]);
     }
@@ -51,14 +54,28 @@ void afficherDonnees(struct Pilote pilotes[], int lignes) {
     printf("\n");
 
     for (int i = 0; i < lignes; ++i) {
-        printf("|");
-        printf("%-*d |", largeurs[0], i );
+        char* color = "";
+        if(strcmp(pilotes[i].team,"Red Bull") == 0){
+            color = BG_BLUE;
+            }
+        if(strcmp(pilotes[i].team , "Williams") == 0){color =BG_CYAN ;}
+        if(strcmp(pilotes[i].team , "AlphaTauri") == 0){color =BG_BLACK;}
+        if(strcmp(pilotes[i].team,"McLaren")==0){color =BG_YELLOW;}
+        if(strcmp(pilotes[i].team , "Alpine")==0){color =BG_BLUE;}
+        if(strcmp(pilotes[i].team ,"Aston Martin") ==0){color =BG_GREEN;}
+        if(strcmp(pilotes[i].team, "Ferrari")==0){color = BG_RED;}
+        if(strcmp(pilotes[i].team , "Haas")==0){color =BG_BLUE;}
+        if(strcmp(pilotes[i].team, "Alfa Romeo")==0){color =BG_RED;}
+        if(strcmp(pilotes[i].team, "Mercedes")==0){color =BG_BLUE;}
+        printf("%s|",color);
+        printf("%-*d |", largeurs[0], i+1 );
         printf("%-*s |", largeurs[1], pilotes[i].nom);
         for (int j = 0; j < 3; ++j) {
-            printf("%-*d |", largeurs[j + 2], pilotes[i].tempsTour[j]);
+            sector_time_format(pilotes[i].tempsTour[j]);
+            printf("  |");
         }
-        printf("%-*d |", largeurs[4], pilotes[i].temps);
-        printf("\n");
+        lap_time_format(pilotes[i].temps);
+        printf("      |%s\n",RESET);
 
         if (i < lignes - 1) {
             printf("+");
