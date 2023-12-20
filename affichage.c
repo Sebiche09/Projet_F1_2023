@@ -2,7 +2,79 @@
 #include <string.h>
 #include "structures.h"
 
+void afficheMeilleurTemps(struct Pilote pilotes[],int lignes){
+    printf("\n\n%s",MAGENTA);
+    int colonnes = 4;
+    int largeurs[colonnes];
+    char* titres[] = {"Meilleur temps" , "Meilleurs Secteur 1", "Meilleurs Secteur 2" , "Meilleurs Secteur 3" };
+    //char* repTemps[] = { pilotes[21].temps,pilotes[21].tempsTour[1],pilotes[21].tempsTour[2],pilotes[21].tempsTour[3]};
+    for(int j = 0; j < colonnes; ++j){
+        largeurs[j] = strlen(titres[j]);
+    }
+    for (int i = 0; i < lignes; ++i) {
+        if (strlen(pilotes[i].nom) > largeurs[1]) {
+            largeurs[1] = strlen(pilotes[i].nom);
+        }
+        for (int j = 0; j < 3; ++j) {
+            int longueur = snprintf(NULL, 0, "%d", pilotes[i].tempsTour[j]);
+            if (longueur > largeurs[j + 2]) {
+                largeurs[j + 2] = longueur;
+            }
+        }
+        int longueur = snprintf(NULL, 0, "%d", pilotes[i].temps);
+        if (longueur > largeurs[4]) {
+            largeurs[4] = longueur;
+        }
+    }
 
+        printf("+");
+    for (int j = 0; j < colonnes; ++j) {
+        for (int k = 0; k < largeurs[j] + 1; ++k) {
+            printf("-");
+        }
+        printf("+");
+    }
+    printf("\n");
+
+    printf("|");
+    for (int j = 0; j < colonnes; ++j) {
+        printf("%-*s |", largeurs[j], titres[j]);
+    }
+    printf("\n");
+
+    printf("+");
+    for (int j = 0; j < colonnes; ++j) {
+        for (int k = 0; k < largeurs[j] + 1; ++k) {
+            printf("-");
+        }
+        printf("+");
+    }
+    printf("\n");
+
+    
+    printf("|");
+    lap_time_format(pilotes[21].temps);
+    printf("       |"),
+    sector_time_format(pilotes[21].tempsTour[0]);
+    printf("              |");
+    sector_time_format(pilotes[21].tempsTour[1]);
+    printf("              |");
+    sector_time_format(pilotes[21].tempsTour[2]);
+    printf("              |");
+    
+    printf("\n");
+
+        
+        printf("+");
+    for (int j = 0; j < colonnes; ++j) {
+        for (int k = 0; k < largeurs[j] + 1; ++k) {
+            printf("-");
+        }
+        printf("+");
+    }
+    printf("\n");
+        
+}
 void afficherDonnees(struct Pilote pilotes[], int lignes) {
 	system("clear");
 
